@@ -13,6 +13,19 @@ class Responsavel(AbstractUser):
     def __str__(self):
         return self.nome or self.username
 
+class Professor(models.Model):
+    nome = models.CharField("Nome Completo", max_length=255)
+    cpf = models.CharField("CPF", max_length=14, unique=True)
+    data_cadastro = models.DateTimeField("Data de Cadastro", auto_now_add=True)
+    area_atuacao = models.CharField("Área de Atuação", max_length=255)
+
+    class Meta:
+        verbose_name = "Professor"
+        verbose_name_plural = "Professores"
+
+    def __str__(self):
+        return self.nome
+
 class Crianca(models.Model):
     nome = models.CharField("Nome", max_length=255)
     idade = models.IntegerField("Idade")
@@ -35,6 +48,7 @@ class Atividade(models.Model):
     tipo = models.CharField("Tipo", max_length=1, choices=TIPO_CHOICES)
     descricao = models.CharField("Descrição", max_length=255)
     nivel = models.IntegerField("Nível")
+    professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, null=True, blank=True, related_name="atividades_validadas", verbose_name="Professor Validador")
 
     class Meta:
         verbose_name = "Atividade"

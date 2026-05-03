@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma Interativa - Início</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <div class="container">
+        <!-- BARRA LATERAL -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="../static/img/book.png" class="logo" alt="Logo">
+                <h1 class="sidebar-title">
+                    <span style="color: deeppink">PLATAFORMA</span> 
+                    <span style="color:violet">INTERATIVA</span> 
+                    <span style="color: #ed7"> PARA ENSINAR </span>
+                    <span style="color: deeppink">LETRAS,</span>
+                    <span style="color:green">NÚMEROS</span>
+                    <span style="color:lightskyblue">E CORES</span>
+                </h1>
+            </div>
+
+            <nav class="menu">
+                <ul>
+                    <li class="active"><i class="fa-solid fa-house"></i> Início</li>
+                    <li><i class="fa-solid fa-star"></i> Favoritos</li>
+                    <li><i class="fa-solid fa-chart-line"></i> Desempenho</li>
+                    <li><i class="fa-solid fa-users"></i> Responsáveis</li>
+                    <li><i class="fa-solid fa-gear"></i> Configurações</li>
+                </ul>
+            </nav>
+
+            <div class="footer-sidebar">
+                <div class="footer-box">
+                    <span class="footer-icon">❤️</span>
+                    <p class="fun-text">Aprender é divertido!</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="header">
+                <div class="welcome-text">
+                    <h1>Bem-vindo(a)!</h1>
+                    <p>Escolha uma atividade e vamos <strong>aprender</strong> juntos!</p>
+                </div>
+                <div class="user-profile">
+                    <button class="user-menu-btn" type="button">
+                        <span class="user-avatar"><i class="fa-solid fa-user"></i></span>
+                        <div class="user-text">
+                            <span class="hello">Olá!</span>
+                            <strong>Aluno(a)</strong>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="#"><i class="fa-solid fa-user"></i> Perfil</a>
+                        <a href="#"><i class="fa-solid fa-gear"></i> Configurações</a>
+                        <a href="#"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+                    </div>
+                </div>
+            </header>
+
+            <section class="activities-grid">
+                <div class="card card-pink">
+                    <img src="../static/img/abc.png" alt="Letras">
+                    <h2>Letras</h2>
+                    <p>Aprenda o alfabeto de forma divertida!</p>
+                    <button class="btn btn-pink">Explorar ></button>
+                </div>
+
+                <div class="card card-blue">
+                    <img src="../static/img/123.png" alt="Números">
+                    <h2>Números</h2>
+                    <p>Descubra os números e comece a contar!</p>
+                    <button class="btn btn-blue">Explorar ></button>
+                </div>
+
+                <div class="card card-yellow">
+                    <img src="../static/img/art.png" alt="Cores">
+                    <h2>Cores</h2>
+                    <p>Conheça as cores e suas combinações!</p>
+                    <button class="btn btn-yellow">Explorar ></button>
+                </div>
+
+                <div class="card card-green">
+                    <img src="../static/img/puzzle.png" alt="Jogos">
+                    <h2>Jogos Educativos</h2>
+                    <p>Jogue, aprenda e desafie-se!</p>
+                    <button class="btn btn-green">Explorar ></button>
+                </div>
+            </section>
+            
+            <section class="stats-container">
+                <div class="progress-card">
+                    <h3>Seu progresso</h3>
+                    <div class="progress-details">
+                        <div class="chart-70">70% <span>Concluído</span></div>
+                        <div class="badges">
+                            <p>Continue assim! Você está indo muito bem!</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="badge-icons">
+                                <span>⭐ 12 Atividades</span>
+                                <span>🏆 8 Conquistas</span>
+                                <span>🕒 5h Tempo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="performance-card">
+                    <h3>Acompanhe o desempenho</h3>
+                    <p>Veja o desenvolvimento e as conquistas da criança de forma detalhada.</p>
+                    <button class="btn-primary">Acessar painel ></button>
+                    <img src="../static/img/grafico.png" alt="Gráfico" class="mini-chart-img">
+                </div>
+            </section>
+
+            <footer class="main-footer">
+                <p>💖 Aqui, aprender é um jogo que transforma o futuro!</p>
+            </footer>
+        </main>
+    </div>
+
+</body>
+</html>

@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6_qrx!o3#6w4#=t)fqk*^&p2u)9f+wc=l1fv_9qwcy7su)7x3l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,10 +75,12 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tcc_edu',        # Nome do banco 
-        'USER': 'postgres',       # Usuário padrão 
-        'PASSWORD': 'postgres', 
+        #'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': 'tcc_edu',        # Nome do banco 
+        #'USER': 'postgres',       # Usuário padrão 
+        #'PASSWORD': 'postgres', 
+        'ENGINE': 'django.db.backends.sqlite3', #sugerido por Copilot
+        'NAME': BASE_DIR / 'db.sqlite3',        #sugerido por Copilot
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -122,6 +124,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 AUTH_USER_MODEL = 'users.Responsavel'

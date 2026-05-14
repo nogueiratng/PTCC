@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Configurações - Plataforma Interativa{% endblock %}
+{% block page_title %}Configurações{% endblock %}
+{% block page_subtitle %}Ajuste a plataforma para o seu conforto e acessibilidade.{% endblock %}
+
+{% block content %}
+<div class="settings-card">
+    <div class="settings-section">
+        <h2>Acessibilidade</h2>
+        <p>Ajuste o tamanho das letras e o contraste para uma leitura mais confortável.</p>
+        <div class="settings-buttons">
+            <button type="button" class="btn btn-primary" onclick="changeFontSize(2)">Aumentar fonte</button>
+            <button type="button" class="btn btn-secondary" onclick="changeFontSize(-2)">Reduzir fonte</button>
+            <button type="button" class="btn btn-secondary" onclick="resetFontSize()">Resetar fonte</button>
+            <button type="button" class="btn btn-primary" onclick="toggleContrast()">Alto contraste</button>
+        </div>
+    </div>
+
+    <div class="settings-section">
+        <h2>Ferramentas úteis</h2>
+        <ul class="settings-list">
+            <li>Modo leitura clara para menos cansaço visual.</li>
+            <li>Botões maiores e navegação direta pelo teclado.</li>
+            <li>Conteúdo pensado para uso em sala de aula ou em casa.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const root = document.documentElement;
+    let currentFontSize = 16;
+
+    function changeFontSize(delta) {
+        currentFontSize = Math.min(28, Math.max(12, currentFontSize + delta));
+        root.style.fontSize = currentFontSize + 'px';
+    }
+
+    function resetFontSize() {
+        currentFontSize = 16;
+        root.style.fontSize = currentFontSize + 'px';
+    }
+
+    function toggleContrast() {
+        document.body.classList.toggle('high-contrast');
+    }
+</script>
+{% endblock %}

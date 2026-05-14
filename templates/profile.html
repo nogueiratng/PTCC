@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil - Plataforma Interativa{% endblock %}
+{% block page_title %}Meu Perfil{% endblock %}
+{% block page_subtitle %}Atualize nome, e-mail e senha com segurança.{% endblock %}
+
+{% block content %}
+<div class="profile-card">
+    <form method="post" class="profile-form">
+        {% csrf_token %}
+        <div class="form-row">
+            <label for="id_nome">Nome completo</label>
+            {{ form.nome }}
+        </div>
+        <div class="form-row">
+            <label for="id_email">E-mail</label>
+            {{ form.email }}
+        </div>
+        <div class="form-row">
+            <label for="id_password">Nova senha</label>
+            {{ form.password }}
+        </div>
+        <div class="form-row">
+            <label for="id_password_confirm">Confirme a nova senha</label>
+            {{ form.password_confirm }}
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar alterações</button>
+    </form>
+</div>
+{% endblock %}

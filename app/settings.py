@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6_qrx!o3#6w4#=t)fqk*^&p2u)9f+wc=l1fv_9qwcy7su)7x3l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -69,6 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
+LOGIN_URL = '/'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -76,11 +78,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tcc_edu',        # Nome do banco 
-        'USER': 'postgres',       # Usuário padrão 
-        'PASSWORD': 'postgres', 
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('DJANGO_DB_NAME', 'tcc_edu'),
+        'USER': os.environ.get('DJANGO_DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DJANGO_DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DJANGO_DB_PORT', '5432'),
     }
 }
 
@@ -122,6 +124,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 AUTH_USER_MODEL = 'users.Responsavel'

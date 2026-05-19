@@ -1,14 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Responsavel, Crianca, Atividade, Desempenho, Professor
+from .models import Usuario, Crianca, Atividade, Desempenho
 
-
-@admin.register(Responsavel)
-class ResponsavelAdmin(UserAdmin):
-    list_display = ('username', 'nome', 'email', 'cpf', 'data_cadastro', 'is_staff')
+@admin.register(Usuario)
+class UsuarioAdmin(UserAdmin):
+    list_display = ('username', 'nome', 'email', 'cpf', 'is_responsavel', 'is_professor', 'data_cadastro', 'is_staff')
     search_fields = ('username', 'nome', 'email', 'cpf')
     fieldsets = UserAdmin.fieldsets + (
-        ('Informações Adicionais', {'fields': ('nome', 'cpf')}),
+        ('Informações Adicionais', {'fields': ('nome', 'cpf', 'is_responsavel', 'is_professor', 'area_atuacao')}),
     )
 
 @admin.register(Crianca)
@@ -22,12 +21,6 @@ class AtividadeAdmin(admin.ModelAdmin):
     list_display = ('tipo', 'descricao', 'nivel', 'professor')
     list_filter = ('tipo', 'nivel', 'professor')
     search_fields = ('descricao',)
-
-@admin.register(Professor)
-class ProfessorAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'cpf', 'area_atuacao', 'data_cadastro')
-    search_fields = ('nome', 'cpf', 'area_atuacao')
-    list_filter = ('area_atuacao',)
 
 @admin.register(Desempenho)
 class DesempenhoAdmin(admin.ModelAdmin):

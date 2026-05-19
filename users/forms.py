@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Responsavel
+from .models import Usuario
 
 class ProfileForm(forms.ModelForm):
+    # Campos extras que não fazem parte direto do Meta (para troca de senha do usuário já logado)
     password = forms.CharField(
         label='Nova senha',
         widget=forms.PasswordInput,
@@ -16,7 +17,7 @@ class ProfileForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Responsavel
+        model = Usuario
         fields = ['nome', 'email']
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Seu nome completo'}),
@@ -28,6 +29,7 @@ class ProfileForm(forms.ModelForm):
         password = cleaned_data.get('password')
         password_confirm = cleaned_data.get('password_confirm')
         
+        # Validação extra de segurança apenas se o usuário tentar alterar a senha
         if password or password_confirm:
             if password != password_confirm:
                 raise forms.ValidationError('As senhas devem ser iguais.')
@@ -37,8 +39,7 @@ class ProfileForm(forms.ModelForm):
 
 
 class RegisterForm(UserCreationForm):
+    # O Formulário de Cadastro fica bem enxuto, pois herda tudo do UserCreationForm
     class Meta(UserCreationForm.Meta):
-        model = Responsavel 
-        fields = ('username', 'nome', 'email')
-
-
+        model = Usuario 
+        fields = ('username', 'nome', 'cpf', 'email', 'is_professor')

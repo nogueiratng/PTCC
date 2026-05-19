@@ -128,4 +128,4 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-AUTH_USER_MODEL = 'users.Responsavel'
+AUTH_USER_MODEL = 'users.Usuario'

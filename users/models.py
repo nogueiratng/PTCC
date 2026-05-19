@@ -1,36 +1,33 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-class Responsavel(AbstractUser):
+class Usuario(AbstractUser):
     nome = models.CharField("Nome Completo", max_length=255)
     cpf = models.CharField("CPF", max_length=14, unique=True)
     data_cadastro = models.DateTimeField("Data de Cadastro", auto_now_add=True)
     
+    is_responsavel = models.BooleanField("É Responsável", default=True)
+    is_professor = models.BooleanField("É Professor", default=False)
+    area_atuacao = models.CharField("Área de Atuação", max_length=255, blank=True, null=True)
+
     class Meta:
-        verbose_name = "Responsável"
-        verbose_name_plural = "Responsáveis"
+        verbose_name = "Usuário"
+        verbose_name_plural = "Usuários"
 
     def __str__(self):
         return self.nome or self.username
-
-class Professor(models.Model):
-    nome = models.CharField("Nome Completo", max_length=255)
-    cpf = models.CharField("CPF", max_length=14, unique=True)
-    data_cadastro = models.DateTimeField("Data de Cadastro", auto_now_add=True)
-    area_atuacao = models.CharField("Área de Atuação", max_length=255)
-
-    class Meta:
-        verbose_name = "Professor"
-        verbose_name_plural = "Professores"
-
-    def __str__(self):
-        return self.nome
 
 class Crianca(models.Model):
     nome = models.CharField("Nome", max_length=255)
     idade = models.IntegerField("Idade")
     data_nascimento = models.DateField("Data de Nascimento")
-    responsavel = models.ForeignKey(Responsavel, on_delete=models.CASCADE, related_name="criancas", verbose_name="Responsável")
+    responsavel = models.ForeignKey(
+        Usuario, 
+        on_delete=models.CASCADE, 
+        limit_choices_to={'is_responsavel': True}, 
+        related_name="criancas", 
+        verbose_name="Responsável"
+    )
 
     class Meta:
         verbose_name = "Criança"
@@ -48,7 +45,15 @@ class Atividade(models.Model):
     tipo = models.CharField("Tipo", max_length=1, choices=TIPO_CHOICES)
     descricao = models.CharField("Descrição", max_length=255)
     nivel = models.IntegerField("Nível")
-    professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, null=True, blank=True, related_name="atividades_validadas", verbose_name="Professor Validador")
+    professor = models.ForeignKey(
+        Usuario, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        limit_choices_to={'is_professor': True}, 
+        related_name="atividades_validadas", 
+        verbose_name="Professor Validador"
+    )
 
     class Meta:
         verbose_name = "Atividade"

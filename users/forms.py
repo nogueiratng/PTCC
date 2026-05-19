@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from .models import Responsavel
 
 class ProfileForm(forms.ModelForm):
@@ -26,9 +27,18 @@ class ProfileForm(forms.ModelForm):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
         password_confirm = cleaned_data.get('password_confirm')
+        
         if password or password_confirm:
             if password != password_confirm:
                 raise forms.ValidationError('As senhas devem ser iguais.')
             if len(password) < 8:
                 raise forms.ValidationError('A senha precisa ter ao menos 8 caracteres.')
         return cleaned_data
+
+
+class RegisterForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = Responsavel 
+        fields = ('username', 'nome', 'email')
+
+

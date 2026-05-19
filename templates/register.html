@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Plataforma Interativa</title>
+    {% load static %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 2rem;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header h1 { color: #333; margin-bottom: 0.5rem; }
+        .login-header p { color: #666; margin: 0; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label {
+            display: block; margin-bottom: 0.5rem; color: #333; font-weight: bold;
+        }
+        /* Estilizando os inputs gerados pelo Django */
+        .form-group input {
+            width: 100%; padding: 0.75rem; border: 1px solid #ddd;
+            border-radius: 5px; font-size: 1rem; box-sizing: border-box;
+        }
+        .btn-login {
+            width: 100%; padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; border-radius: 5px; font-size: 1rem;
+            cursor: pointer; transition: opacity 0.3s; margin-top: 1rem;
+        }
+        .btn-login:hover { opacity: 0.9; }
+        .helptext { font-size: 0.8rem; color: #666; display: block; margin-top: 0.2rem; }
+        .errorlist { color: #dc3545; font-size: 0.85rem; padding-left: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <a href="{% url 'users:login' %}" style="text-decoration: none; color: #666; display: inline-block; margin-bottom: 10px; font-size: 0.9rem; transition: color 0.3s;">
+            &#8592; Voltar
+        </a>
+        <div class="login-header">
+            <h1>Nova Conta</h1>
+            <p>Preencha os dados para se cadastrar</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span class="helptext">{{ field.help_text }}</span>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="errorlist">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-login">Criar Conta</button>
+            
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <p style="color: #666; font-size: 0.95rem; margin: 0;">
+                    Já tem uma conta? 
+                    <a href="{% url 'users:login' %}" style="color: #764ba2; text-decoration: none; font-weight: bold;">Faça login</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

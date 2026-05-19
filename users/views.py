@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
-
+from .forms import ProfileForm, RegisterForm
 from .forms import ProfileForm
 
 @login_required
@@ -64,3 +64,21 @@ def login_view(request):
         else:
             messages.error(request, 'Credenciais inválidas. Tente novamente.')
     return render(request, 'login.html')
+
+def register_view(request):
+    """View para criar uma nova conta de usuário"""
+    if request.user.is_authenticated:
+        return redirect('users:dashboard')
+        
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Logar o usuário automaticamente após o cadastro (opcional)
+            login(request, user)
+            messages.success(request, 'Conta criada com sucesso! Bem-vindo(a)!')
+            return redirect('users:dashboard')
+    else:
+        form = RegisterForm()
+        
+    return render(request, 'register.html', {'form': form})

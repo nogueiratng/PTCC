@@ -106,6 +106,12 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit" class="btn-login">Entrar</button>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <p style="color: #666; font-size: 0.95rem; margin: 0;">
+                    Ainda não tem uma conta? 
+                    <a href="{% url 'users:register' %}" style="color: #764ba2; text-decoration: none; font-weight: bold;">Cadastre-se</a>
+                </p>
+            </div>
         </form>
     </div>
 </body>

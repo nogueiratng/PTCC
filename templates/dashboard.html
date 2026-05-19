@@ -5,6 +5,28 @@
 {% block page_subtitle %}Escolha uma atividade e vamos <strong>aprender</strong> juntos!{% endblock %}
 
 {% block content %}
+{% if request.user.is_responsavel %}
+<section class="children-container" style="background: white; padding: 20px; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="margin: 0; color: #333;">👦👧 Minhas Crianças</h2>
+        <a href="{% url 'users:adicionar_crianca' %}" class="btn btn-primary" style="padding: 10px 20px; background-color: deeppink; color: white; text-decoration: none; border-radius: 10px;">+ Adicionar Filho(a)</a>
+    </div>
+    
+    {% if criancas %}
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            {% for crianca in criancas %}
+                <div style="background: #f7f7f7; padding: 15px; border-radius: 10px; border-left: 5px solid lightskyblue; min-width: 200px;">
+                    <h3 style="margin: 0 0 5px 0; color: #555;">{{ crianca.nome }}</h3>
+                    <p style="margin: 0; font-size: 0.9rem; color: #777;">Idade: {{ crianca.idade }} anos</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #666; font-style: italic;">Você ainda não cadastrou nenhuma criança. Clique no botão acima para começar!</p>
+    {% endif %}
+</section>
+{% endif %}
+
 <section class="activities-grid">
     <div class="card card-pink">
         <img src="{% static 'img/abc.png' %}" alt="Letras">

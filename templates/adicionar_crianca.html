@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Adicionar Filho(a) - Plataforma Interativa{% endblock %}
+{% block page_title %}Adicionar Criança{% endblock %}
+{% block page_subtitle %}Cadastre seu filho(a) para começar a acompanhar o desempenho.{% endblock %}
+
+{% block content %}
+<div class="profile-card">
+    <form method="post" class="profile-form">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <label for="{{ form.nome.id_for_label }}">Nome da Criança</label>
+            {{ form.nome }}
+            {% if form.nome.errors %}
+                <div class="errorlist" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ form.nome.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-row">
+            <label for="{{ form.data_nascimento.id_for_label }}">Data de Nascimento</label>
+            {{ form.data_nascimento }}
+            <small style="color: #666;">A idade será calculada automaticamente.</small>
+            {% if form.data_nascimento.errors %}
+                <div class="errorlist" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ form.data_nascimento.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background-color: deeppink; color: white; border: none; border-radius: 10px; cursor: pointer;">
+                Salvar Cadastro
+            </button>
+            <a href="{% url 'users:dashboard' %}" style="margin-left: 15px; color: #666; text-decoration: none;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

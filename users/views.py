@@ -2,13 +2,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
-from .forms import ProfileForm, RegisterForm
-from .forms import ProfileForm
+from .forms import ProfileForm, RegisterForm, CriancaForm
+from .models import Crianca
 
 @login_required
 def dashboard(request):
     """View para o dashboard do usuário"""
-    return render(request, 'dashboard.html')
+    if request.user.is_responsavel:
+        criancas = request.user.criancas.all()
+    else:
+        criancas = None
+    return render(request, 'dashboard.html', {'criancas': criancas})
 
 @login_required
 def profile_view(request):
@@ -82,3 +86,24 @@ def register_view(request):
         form = RegisterForm()
         
     return render(request, 'register.html', {'form': form})
+
+@login_required
+def adicionar_crianca_view(request):
+    """View para cadastrar um novo filho"""
+    # Se não for responsável, redireciona
+    if not request.user.is_responsavel:
+        messages.error(request, 'Apenas responsáveis podem cadastrar crianças.')
+        return redirect('users:dashboard')
+        
+    if request.method == 'POST':
+        form = CriancaForm(request.POST)
+        if form.is_valid():
+            crianca = form.save(commit=False)
+            crianca.responsavel = request.user
+            crianca.save()
+            messages.success(request, f'Criança {crianca.nome} cadastrada com sucesso!')
+            return redirect('users:dashboard')
+    else:
+        form = CriancaForm()
+        
+    return render(request, 'adicionar_crianca.html', {'form': form})

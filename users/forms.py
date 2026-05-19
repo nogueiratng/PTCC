@@ -39,7 +39,66 @@ class ProfileForm(forms.ModelForm):
 
 
 class RegisterForm(UserCreationForm):
-    # O Formulário de Cadastro fica bem enxuto, pois herda tudo do UserCreationForm
+    # Criamos as opções de seleção
+    TIPO_CHOICES = (
+        ('responsavel', 'Sou Responsável (Pai/Mãe)'),
+        ('professor', 'Sou Professor(a)'),
+    )
+    
+    # Criamos um campo visual de Seleção (Dropdown)
+    tipo_conta = forms.ChoiceField(
+        choices=TIPO_CHOICES, 
+        label="Tipo de Conta",
+        widget=forms.Select(attrs={'style': 'width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; box-sizing: border-box; background: white;'})
+    )
+
     class Meta(UserCreationForm.Meta):
         model = Usuario 
-        fields = ('username', 'nome', 'cpf', 'email', 'is_professor')
+        fields = ('username', 'nome', 'cpf', 'email')
+        
+    def save(self, commit=True):
+        # Pausa o salvamento automático para ajustarmos as flags
+        user = super().save(commit=False)
+        tipo = self.cleaned_data.get('tipo_conta')
+        
+        # Define as permissões com base no que a pessoa escolheu na tela
+        if tipo == 'professor':
+            user.is_professor = True
+            user.is_responsavel = False
+        else:
+            user.is_responsavel = True
+            user.is_professor = False
+            
+        # Agora sim salva no banco de dados
+        if commit:
+            user.save()
+        return user
+
+from datetime import date
+from .models import Crianca
+
+class CriancaForm(forms.ModelForm):
+    class Meta:
+        model = Crianca
+        # Só pedimos o nome e data de nascimento na tela
+        fields = ['nome', 'data_nascimento']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Nome da criança'}),
+            'data_nascimento': forms.DateInput(attrs={'class': 'form-input', 'type': 'date'}),
+        }
+
+    def save(self, commit=True):
+        # Pausa o salvamento para calcularmos a idade
+        crianca = super().save(commit=False)
+        
+        # Calcula a idade baseada na data de nascimento
+        hoje = date.today()
+        nasc = self.cleaned_data.get('data_nascimento')
+        idade = hoje.year - nasc.year - ((hoje.month, hoje.day) < (nasc.month, nasc.day))
+        
+        # Preenche o campo idade que o banco exige
+        crianca.idade = idade
+        
+        if commit:
+            crianca.save()
+        return crianca

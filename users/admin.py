@@ -4,11 +4,20 @@ from .models import Usuario, Crianca, Atividade, Desempenho
 
 @admin.register(Usuario)
 class UsuarioAdmin(UserAdmin):
-    list_display = ('username', 'nome', 'email', 'cpf', 'is_responsavel', 'is_professor', 'data_cadastro', 'is_staff')
+    # Substituímos 'cpf' por 'cpf_mascarado' na lista de exibição
+    list_display = ('username', 'nome', 'email', 'cpf_mascarado', 'is_responsavel', 'is_professor', 'data_cadastro', 'is_staff')
     search_fields = ('username', 'nome', 'email', 'cpf')
     fieldsets = UserAdmin.fieldsets + (
         ('Informações Adicionais', {'fields': ('nome', 'cpf', 'is_responsavel', 'is_professor', 'area_atuacao')}),
     )
+
+    # Cria uma função personalizada para exibir o CPF mascarado
+    def cpf_mascarado(self, obj):
+        if obj.cpf and len(obj.cpf) >= 4:
+            # Pega apenas os dois últimos caracteres do CPF
+            return f"***.***.***-{obj.cpf[-2:]}"
+        return "-"
+    cpf_mascarado.short_description = "CPF"
 
 @admin.register(Crianca)
 class CriancaAdmin(admin.ModelAdmin):

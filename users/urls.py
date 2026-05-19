@@ -10,4 +10,5 @@ urlpatterns = [
     path('perfil/', views.profile_view, name='perfil'),
     path('configuracoes/', views.settings_view, name='configuracoes'),
     path('logout/', views.logout_view, name='logout'),
+    path('adicionar-filho/', views.adicionar_crianca_view, name='adicionar_crianca'),
 ]

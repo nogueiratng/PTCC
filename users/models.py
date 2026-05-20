@@ -76,3 +76,24 @@ class Desempenho(models.Model):
 
     def __str__(self):
         return f"{self.crianca.nome} - {self.atividade}"
+
+class Pergunta(models.Model):
+    atividade = models.ForeignKey(Atividade, on_delete=models.CASCADE, related_name="perguntas")
+    enunciado = models.CharField("Enunciado da Pergunta", max_length=255)
+    opcao_a = models.CharField("Opção A", max_length=255)
+    opcao_b = models.CharField("Opção B", max_length=255)
+    opcao_c = models.CharField("Opção C", max_length=255)
+    
+    OPCOES_CORRETAS = (
+        ('A', 'Opção A'),
+        ('B', 'Opção B'),
+        ('C', 'Opção C')
+    )
+    resposta_correta = models.CharField("Resposta Correta", max_length=1, choices=OPCOES_CORRETAS)
+
+    class Meta:
+        verbose_name = "Pergunta"
+        verbose_name_plural = "Perguntas"
+
+    def __str__(self):
+        return f"[{self.atividade}] {self.enunciado}"

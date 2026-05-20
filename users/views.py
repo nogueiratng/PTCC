@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
-from .forms import ProfileForm, RegisterForm, CriancaForm, AtividadeForm
-from .models import Crianca, Atividade
+from django.http import JsonResponse
+import json
+from .forms import ProfileForm, RegisterForm, CriancaForm, AtividadeForm, PerguntaForm
+from .models import Crianca, Atividade, Pergunta, Desempenho
 
 @login_required
 def dashboard(request):
@@ -131,3 +133,89 @@ def criar_atividade_view(request):
         form = AtividadeForm()
         
     return render(request, 'criar_atividade.html', {'form': form})
+
+@login_required
+def adicionar_pergunta_view(request, atividade_id):
+    """View para o professor adicionar uma pergunta a uma atividade"""
+    if not request.user.is_professor:
+        return redirect('users:dashboard')
+        
+    atividade = get_object_or_404(Atividade, id=atividade_id, professor=request.user)
+    
+    if request.method == 'POST':
+        form = PerguntaForm(request.POST)
+        if form.is_valid():
+            pergunta = form.save(commit=False)
+            pergunta.atividade = atividade
+            pergunta.save()
+            messages.success(request, 'Pergunta adicionada com sucesso!')
+            return redirect('users:dashboard') # No futuro podemos redirecionar de volta pra adicionar mais
+    else:
+        form = PerguntaForm()
+        
+    return render(request, 'adicionar_pergunta.html', {'form': form, 'atividade': atividade})
+
+@login_required
+def jogar_atividade_view(request, atividade_id):
+    """View que carrega a tela do jogo e manda os dados das perguntas em JSON"""
+    if not request.user.is_responsavel:
+        messages.error(request, 'Apenas crianças através dos responsáveis podem jogar.')
+        return redirect('users:dashboard')
+        
+    atividade = get_object_or_404(Atividade, id=atividade_id)
+    perguntas = atividade.perguntas.all()
+    
+    # Prepara os dados das perguntas para o Javascript ler
+    perguntas_data = []
+    for p in perguntas:
+        perguntas_data.append({
+            'enunciado': p.enunciado,
+            'opcoes': {
+                'A': p.opcao_a,
+                'B': p.opcao_b,
+                'C': p.opcao_c
+            },
+            'correta': p.resposta_correta
+        })
+        
+    # Precisa saber qual criança está jogando.
+    # Por enquanto, como o pai escolhe, vamos supor que ele passa o ID na URL ou apenas escolhe o primeiro filho para teste
+    crianca = request.user.criancas.first()
+    if not crianca:
+        messages.error(request, 'Você precisa cadastrar uma criança primeiro.')
+        return redirect('users:dashboard')
+        
+    context = {
+        'atividade': atividade,
+        'perguntas_json': perguntas_data,
+        'crianca': crianca
+    }
+    return render(request, 'jogo.html', context)
+
+@login_required
+def salvar_desempenho_api(request):
+    """API invisível chamada pelo JS para salvar os pontos da criança ao final do jogo"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            crianca_id = data.get('crianca_id')
+            atividade_id = data.get('atividade_id')
+            acertos = int(data.get('acertos', 0))
+            erros = int(data.get('erros', 0))
+            pontuacao = int(data.get('pontuacao', 0))
+            
+            crianca = get_object_or_404(Crianca, id=crianca_id, responsavel=request.user)
+            atividade = get_object_or_404(Atividade, id=atividade_id)
+            
+            Desempenho.objects.create(
+                crianca=crianca,
+                atividade=atividade,
+                acertos=acertos,
+                erros=erros,
+                pontuacao=pontuacao
+            )
+            return JsonResponse({'status': 'success', 'message': 'Desempenho salvo!'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': 'Método não permitido'}, status=405)

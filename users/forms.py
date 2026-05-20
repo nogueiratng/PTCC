@@ -119,3 +119,24 @@ class AtividadeForm(forms.ModelForm):
             'descricao': 'Descrição da Atividade',
             'nivel': 'Nível de Dificuldade (Ex: 1 a 10)',
         }
+
+from .models import Pergunta
+
+class PerguntaForm(forms.ModelForm):
+    class Meta:
+        model = Pergunta
+        fields = ['enunciado', 'opcao_a', 'opcao_b', 'opcao_c', 'resposta_correta']
+        widgets = {
+            'enunciado': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: Quantos balões estão na tela?'}),
+            'opcao_a': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: 2'}),
+            'opcao_b': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: 4'}),
+            'opcao_c': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: 5'}),
+            'resposta_correta': forms.Select(attrs={'class': 'form-input'})
+        }
+        labels = {
+            'enunciado': 'Enunciado (Pergunta)',
+            'opcao_a': 'Opção A',
+            'opcao_b': 'Opção B',
+            'opcao_c': 'Opção C',
+            'resposta_correta': 'Qual é a resposta correta?'
+        }

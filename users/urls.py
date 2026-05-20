@@ -12,4 +12,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('adicionar-filho/', views.adicionar_crianca_view, name='adicionar_crianca'),
     path('criar-atividade/', views.criar_atividade_view, name='criar_atividade'),
+    path('atividade/<int:atividade_id>/adicionar-pergunta/', views.adicionar_pergunta_view, name='adicionar_pergunta'),
+    path('jogar/<int:atividade_id>/', views.jogar_atividade_view, name='jogar_atividade'),
+    path('api/salvar-desempenho/', views.salvar_desempenho_api, name='salvar_desempenho'),
 ]

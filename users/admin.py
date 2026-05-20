@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario, Crianca, Atividade, Desempenho
+from .models import Usuario, Crianca, Atividade, Desempenho, Pergunta
 
 @admin.register(Usuario)
 class UsuarioAdmin(UserAdmin):
@@ -36,3 +36,9 @@ class DesempenhoAdmin(admin.ModelAdmin):
     list_display = ('crianca', 'atividade', 'pontuacao', 'acertos', 'erros', 'data_realizacao')
     list_filter = ('atividade__tipo', 'data_realizacao')
     search_fields = ('crianca__nome', 'atividade__descricao')
+
+@admin.register(Pergunta)
+class PerguntaAdmin(admin.ModelAdmin):
+    list_display = ('atividade', 'enunciado', 'resposta_correta')
+    search_fields = ('enunciado', 'atividade__descricao')
+    list_filter = ('atividade__tipo',)

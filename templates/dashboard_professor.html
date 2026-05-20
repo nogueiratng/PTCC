@@ -28,7 +28,8 @@
                     <td style="padding: 12px; color: #555;">{{ atividade.descricao }}</td>
                     <td style="padding: 12px; color: #6ed07a; font-weight: bold;">Nível {{ atividade.nivel }}</td>
                     <td style="padding: 12px;">
-                        <a href="#" style="color: #ff8fa3; text-decoration: none; font-size: 0.9rem;">Ver detalhes</a>
+                        <a href="{% url 'users:adicionar_pergunta' atividade.id %}" style="color: #ff8fa3; text-decoration: none; font-size: 0.9rem; margin-right: 10px; font-weight: bold;">+ Perguntas</a>
+                        <a href="#" style="color: #5ba4fc; text-decoration: none; font-size: 0.9rem;">Detalhes</a>
                     </td>
                 </tr>
                 {% endfor %}

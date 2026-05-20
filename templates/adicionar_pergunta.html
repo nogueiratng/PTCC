@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Adicionar Pergunta - Plataforma Interativa{% endblock %}
+{% block page_title %}Adicionar Pergunta{% endblock %}
+{% block page_subtitle %}Atividade: {{ atividade.descricao }} ({{ atividade.get_tipo_display }}){% endblock %}
+
+{% block content %}
+<div class="profile-card">
+    <p style="margin-bottom: 20px; color: #555;">Cadastre uma nova fase para este jogo. Você pode usar emojis no enunciado para ficar mais lúdico! Ex: 🎈🎈 + 🎈 = ?</p>
+    
+    <form method="post" class="profile-form">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <label for="{{ form.enunciado.id_for_label }}">{{ form.enunciado.label }}</label>
+            {{ form.enunciado }}
+            {% if form.enunciado.errors %}
+                <div class="errorlist" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ form.enunciado.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px;">
+            <div class="form-row">
+                <label for="{{ form.opcao_a.id_for_label }}" style="color: #5ba4fc;">{{ form.opcao_a.label }}</label>
+                {{ form.opcao_a }}
+                {% if form.opcao_a.errors %}<div class="errorlist" style="color: red; font-size: 0.85rem;">{{ form.opcao_a.errors }}</div>{% endif %}
+            </div>
+            <div class="form-row">
+                <label for="{{ form.opcao_b.id_for_label }}" style="color: #ffc93c;">{{ form.opcao_b.label }}</label>
+                {{ form.opcao_b }}
+                {% if form.opcao_b.errors %}<div class="errorlist" style="color: red; font-size: 0.85rem;">{{ form.opcao_b.errors }}</div>{% endif %}
+            </div>
+            <div class="form-row">
+                <label for="{{ form.opcao_c.id_for_label }}" style="color: #ff8fa3;">{{ form.opcao_c.label }}</label>
+                {{ form.opcao_c }}
+                {% if form.opcao_c.errors %}<div class="errorlist" style="color: red; font-size: 0.85rem;">{{ form.opcao_c.errors }}</div>{% endif %}
+            </div>
+        </div>
+        
+        <div class="form-row" style="margin-top: 20px; background: #f8faff; padding: 15px; border-radius: 10px;">
+            <label for="{{ form.resposta_correta.id_for_label }}" style="color: #6ed07a; font-weight: 900;">{{ form.resposta_correta.label }}</label>
+            {{ form.resposta_correta }}
+            {% if form.resposta_correta.errors %}
+                <div class="errorlist" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ form.resposta_correta.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background-color: #6ed07a; color: white; border: none; border-radius: 10px; cursor: pointer;">
+                Salvar Pergunta
+            </button>
+            <a href="{% url 'users:dashboard' %}" style="margin-left: 15px; color: #666; text-decoration: none;">Voltar ao Painel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

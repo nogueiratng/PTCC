@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Painel do Professor{% endblock %}
+{% block page_subtitle %}Gerencie atividades e acompanhe o desempenho geral dos alunos.{% endblock %}
+
+{% block content %}
+<section class="children-container" style="background: white; padding: 20px; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="margin: 0; color: #333;">🎮 Minhas Atividades Cadastradas</h2>
+        <a href="{% url 'users:criar_atividade' %}" class="btn btn-primary" style="padding: 10px 20px; background-color: #5ba4fc; color: white; text-decoration: none; border-radius: 10px;">+ Criar Nova Atividade</a>
+    </div>
+    
+    {% if atividades %}
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+            <thead>
+                <tr style="background-color: #f7f7f7; text-align: left;">
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd; color: #555;">Tipo</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd; color: #555;">Descrição</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd; color: #555;">Nível</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd; color: #555;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for atividade in atividades %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px; font-weight: bold; color: #7c83fd;">{{ atividade.get_tipo_display }}</td>
+                    <td style="padding: 12px; color: #555;">{{ atividade.descricao }}</td>
+                    <td style="padding: 12px; color: #6ed07a; font-weight: bold;">Nível {{ atividade.nivel }}</td>
+                    <td style="padding: 12px;">
+                        <a href="#" style="color: #ff8fa3; text-decoration: none; font-size: 0.9rem;">Ver detalhes</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="color: #666; font-style: italic; margin-top: 15px;">Você ainda não cadastrou nenhuma atividade. Crie desafios para os alunos utilizando o botão acima!</p>
+    {% endif %}
+</section>
+
+<section class="stats-container">
+    <div class="performance-card" style="grid-column: 1 / -1;">
+        <h3>Desempenho Geral da Turma</h3>
+        <p>Acompanhe como os alunos estão se saindo nas atividades que você criou. (Módulo em desenvolvimento).</p>
+        <button class="btn-primary" style="background-color: #ffc93c; color: #333;">Ver Relatórios Detalhados ></button>
+        <img src="{% static 'img/grafico.png' %}" alt="Gráfico" class="mini-chart-img" style="opacity: 0.5;">
+    </div>
+</section>
+{% endblock %}

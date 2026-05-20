@@ -102,3 +102,20 @@ class CriancaForm(forms.ModelForm):
         if commit:
             crianca.save()
         return crianca
+
+from .models import Atividade
+
+class AtividadeForm(forms.ModelForm):
+    class Meta:
+        model = Atividade
+        fields = ['tipo', 'descricao', 'nivel']
+        widgets = {
+            'tipo': forms.Select(attrs={'class': 'form-input'}),
+            'descricao': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ex: Jogo de somar frutas'}),
+            'nivel': forms.NumberInput(attrs={'class': 'form-input', 'min': 1, 'max': 10}),
+        }
+        labels = {
+            'tipo': 'Tipo de Atividade',
+            'descricao': 'Descrição da Atividade',
+            'nivel': 'Nível de Dificuldade (Ex: 1 a 10)',
+        }

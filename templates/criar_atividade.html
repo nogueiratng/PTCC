@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Criar Nova Atividade - Plataforma Interativa{% endblock %}
+{% block page_title %}Nova Atividade Educacional{% endblock %}
+{% block page_subtitle %}Cadastre um novo desafio para os alunos.{% endblock %}
+
+{% block content %}
+<div class="profile-card">
+    <form method="post" class="profile-form">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <label for="{{ form.tipo.id_for_label }}">Tipo de Atividade</label>
+            {{ form.tipo }}
+            {% if form.tipo.errors %}
+                <div class="errorlist" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ form.tipo.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-row">
+            <label for="{{ form.descricao.id_for_label }}">Descrição</label>
+            {{ form.descricao }}
+            <small style="color: #666;">Ex: Jogo de somar frutas, Identificar as vogais, etc.</small>
+            {% if form.descricao.errors %}
+                <div class="errorlist" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ form.descricao.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-row">
+            <label for="{{ form.nivel.id_for_label }}">Nível de Dificuldade</label>
+            {{ form.nivel }}
+            <small style="color: #666;">De 1 (Muito Fácil) a 10 (Muito Difícil).</small>
+            {% if form.nivel.errors %}
+                <div class="errorlist" style="color: red; font-size: 0.85rem; margin-top: 5px;">{{ form.nivel.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background-color: deeppink; color: white; border: none; border-radius: 10px; cursor: pointer;">
+                Salvar Atividade
+            </button>
+            <a href="{% url 'users:dashboard' %}" style="margin-left: 15px; color: #666; text-decoration: none;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

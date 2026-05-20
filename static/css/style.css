@@ -104,31 +104,37 @@ section  img {
 
 .menu ul {
     list-style: none;
-    justify-items: start;
+    padding: 0;
 }
 
 .menu li {
-    padding: 15px;
-    margin: 10px;
+    margin-bottom: 10px;
+}
+
+.menu li a {
+    padding: 15px 20px;
     border-radius: 15px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.3s, color 0.3s;
     display: flex;
     align-items: center;
     font-weight: 700;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1.05rem;
 }
 
-ul i{
-    margin-right: 10px;
+.menu li a i {
+    width: 24px;
+    margin-right: 12px;
+    text-align: center;
+    font-size: 1.2rem;
 }
 
-.menu li.active {
+.menu li a:hover, 
+.menu li.active a {
     background-color: #f0f4ff;
     color: #7c83fd;
-}
-
-.menu li:hover {
-    background-color: #f9f9f9;
 }
 
 .content {

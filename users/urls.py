@@ -11,4 +11,5 @@ urlpatterns = [
     path('configuracoes/', views.settings_view, name='configuracoes'),
     path('logout/', views.logout_view, name='logout'),
     path('adicionar-filho/', views.adicionar_crianca_view, name='adicionar_crianca'),
+    path('criar-atividade/', views.criar_atividade_view, name='criar_atividade'),
 ]

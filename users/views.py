@@ -2,12 +2,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
-from .forms import ProfileForm, RegisterForm, CriancaForm
-from .models import Crianca
+from .forms import ProfileForm, RegisterForm, CriancaForm, AtividadeForm
+from .models import Crianca, Atividade
 
 @login_required
 def dashboard(request):
     """View para o dashboard do usuário"""
+    if request.user.is_professor:
+        atividades = request.user.atividades_validadas.all()
+        return render(request, 'dashboard_professor.html', {'atividades': atividades})
+    
     if request.user.is_responsavel:
         criancas = request.user.criancas.all()
     else:
@@ -107,3 +111,23 @@ def adicionar_crianca_view(request):
         form = CriancaForm()
         
     return render(request, 'adicionar_crianca.html', {'form': form})
+
+@login_required
+def criar_atividade_view(request):
+    """View para o professor cadastrar uma nova atividade"""
+    if not request.user.is_professor:
+        messages.error(request, 'Apenas professores podem cadastrar atividades.')
+        return redirect('users:dashboard')
+        
+    if request.method == 'POST':
+        form = AtividadeForm(request.POST)
+        if form.is_valid():
+            atividade = form.save(commit=False)
+            atividade.professor = request.user
+            atividade.save()
+            messages.success(request, 'Atividade cadastrada com sucesso!')
+            return redirect('users:dashboard')
+    else:
+        form = AtividadeForm()
+        
+    return render(request, 'criar_atividade.html', {'form': form})

@@ -219,3 +219,44 @@ def salvar_desempenho_api(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     
     return JsonResponse({'status': 'error', 'message': 'Método não permitido'}, status=405)
+
+@login_required
+def iniciar_jogo_view(request, tipo):
+    """Roteador inteligente: encontra a próxima atividade não-concluída pela criança"""
+    if not request.user.is_responsavel:
+        messages.error(request, 'Apenas responsáveis podem iniciar jogos.')
+        return redirect('users:dashboard')
+
+    # Pega a primeira criança do responsável (futuramente pode ter seleção)
+    crianca = request.user.criancas.first()
+    if not crianca:
+        messages.error(request, 'Cadastre uma criança primeiro para poder jogar!')
+        return redirect('users:dashboard')
+
+    # IDs das atividades que essa criança já jogou
+    atividades_ja_feitas = Desempenho.objects.filter(
+        crianca=crianca
+    ).values_list('atividade_id', flat=True)
+
+    # Busca atividades do tipo pedido, com perguntas cadastradas, que ainda não foram feitas
+    proxima_atividade = Atividade.objects.filter(
+        tipo=tipo,
+        perguntas__isnull=False
+    ).exclude(
+        id__in=atividades_ja_feitas
+    ).distinct().first()
+
+    if proxima_atividade:
+        # Criança tem uma atividade nova! Redireciona para o jogo.
+        return redirect('users:jogar_atividade', atividade_id=proxima_atividade.id)
+    else:
+        # Verifica se existem atividades desse tipo (mas a criança já fez todas)
+        total_atividades = Atividade.objects.filter(tipo=tipo, perguntas__isnull=False).distinct().count()
+        tipo_display = {'L': 'Letras', 'N': 'Números', 'C': 'Cores'}.get(tipo, tipo)
+
+        if total_atividades > 0:
+            messages.success(request, f'🏆 Parabéns! Você já completou todos os desafios de {tipo_display}! Aguarde novos desafios em breve.')
+        else:
+            messages.info(request, f'Ainda não há jogos de {tipo_display} disponíveis. Fique de olho!')
+
+        return redirect('users:dashboard')

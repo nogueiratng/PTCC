@@ -32,28 +32,28 @@
         <img src="{% static 'img/abc.png' %}" alt="Letras">
         <h2>Letras</h2>
         <p>Aprenda o alfabeto de forma divertida!</p>
-        <button class="btn btn-pink">Explorar ></button>
+        <a href="{% url 'users:iniciar_jogo' 'L' %}" class="btn btn-pink">Explorar ></a>
     </div>
 
     <div class="card card-blue">
         <img src="{% static 'img/123.png' %}" alt="Números">
         <h2>Números</h2>
         <p>Descubra os números e comece a contar!</p>
-        <button class="btn btn-blue">Explorar ></button>
+        <a href="{% url 'users:iniciar_jogo' 'N' %}" class="btn btn-blue">Explorar ></a>
     </div>
 
     <div class="card card-yellow">
         <img src="{% static 'img/art.png' %}" alt="Cores">
         <h2>Cores</h2>
         <p>Conheça as cores e suas combinações!</p>
-        <button class="btn btn-yellow">Explorar ></button>
+        <a href="{% url 'users:iniciar_jogo' 'C' %}" class="btn btn-yellow">Explorar ></a>
     </div>
 
     <div class="card card-green">
         <img src="{% static 'img/puzzle.png' %}" alt="Jogos">
         <h2>Jogos Educativos</h2>
         <p>Jogue, aprenda e desafie-se!</p>
-        <button class="btn btn-green">Explorar ></button>
+        <a href="#" class="btn btn-green">Em breve ></a>
     </div>
 </section>
 

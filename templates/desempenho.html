@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Desempenho dos Filhos - Plataforma Interativa{% endblock %}
+{% block page_title %}📊 Relatório de Desempenho{% endblock %}
+{% block page_subtitle %}Acompanhe a evolução e o aprendizado dos seus filhos.{% endblock %}
+
+{% block content %}
+
+{% if not dados_criancas %}
+    <div style="background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <p style="font-size: 1.2rem; color: #777;">Você ainda não tem crianças cadastradas. <a href="{% url 'users:adicionar_crianca' %}" style="color: #7c83fd;">Adicione um filho aqui.</a></p>
+    </div>
+{% endif %}
+
+{% for dado in dados_criancas %}
+<div style="margin-bottom: 2.5rem;">
+
+    <!-- Cabeçalho da Criança -->
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 1.2rem;">
+        <div style="width: 55px; height: 55px; background: linear-gradient(135deg, #7c83fd, #ff8fa3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; font-weight: 900; flex-shrink: 0;">
+            {{ dado.crianca.nome|slice:":1"|upper }}
+        </div>
+        <div>
+            <h2 style="margin: 0; color: #333; font-size: 1.5rem;">{{ dado.crianca.nome }}</h2>
+            <span style="color: #7c83fd; font-size: 0.9rem; font-weight: 600;">{{ dado.crianca.idade }} anos</span>
+        </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 1.5rem;">
+        <div style="background: linear-gradient(135deg, #7c83fd, #9b9fff); padding: 20px; border-radius: 20px; color: white; text-align: center;">
+            <p style="margin: 0; font-size: 0.85rem; opacity: 0.85;">Total de Jogos</p>
+            <p style="margin: 5px 0 0; font-size: 2.2rem; font-weight: 900;">{{ dado.total_jogos }}</p>
+        </div>
+        <div style="background: linear-gradient(135deg, #6ed07a, #8de898); padding: 20px; border-radius: 20px; color: white; text-align: center;">
+            <p style="margin: 0; font-size: 0.85rem; opacity: 0.85;">Total de Acertos</p>
+            <p style="margin: 5px 0 0; font-size: 2.2rem; font-weight: 900;">{{ dado.total_acertos }}</p>
+        </div>
+        <div style="background: linear-gradient(135deg, #ff8fa3, #ffb3c1); padding: 20px; border-radius: 20px; color: white; text-align: center;">
+            <p style="margin: 0; font-size: 0.85rem; opacity: 0.85;">Total de Erros</p>
+            <p style="margin: 5px 0 0; font-size: 2.2rem; font-weight: 900;">{{ dado.total_erros }}</p>
+        </div>
+        <div style="background: linear-gradient(135deg, #ffc93c, #ffd96a); padding: 20px; border-radius: 20px; color: white; text-align: center;">
+            <p style="margin: 0; font-size: 0.85rem; opacity: 0.85;">Pontuação Total</p>
+            <p style="margin: 5px 0 0; font-size: 2.2rem; font-weight: 900;">{{ dado.pontuacao_total }}</p>
+        </div>
+    </div>
+
+    <!-- Histórico de Jogos -->
+    <div style="background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <h3 style="margin: 0 0 1rem 0; color: #333; font-size: 1.1rem;">Histórico de Jogos</h3>
+
+        {% if dado.desempenhos %}
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f8faff; border-radius: 10px;">
+                        <th style="padding: 12px 15px; text-align: left; color: #7c83fd; font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid #eef0ff;">Atividade</th>
+                        <th style="padding: 12px 15px; text-align: center; color: #7c83fd; font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid #eef0ff;">Tipo</th>
+                        <th style="padding: 12px 15px; text-align: center; color: #6ed07a; font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid #eef0ff;">✅ Acertos</th>
+                        <th style="padding: 12px 15px; text-align: center; color: #ff8fa3; font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid #eef0ff;">❌ Erros</th>
+                        <th style="padding: 12px 15px; text-align: center; color: #ffc93c; font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid #eef0ff;">⭐ Pontos</th>
+                        <th style="padding: 12px 15px; text-align: left; color: #aaa; font-size: 0.85rem; font-weight: 700; border-bottom: 2px solid #eef0ff;">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in dado.desempenhos %}
+                    <tr style="border-bottom: 1px solid #f0f0f0; transition: background 0.2s;">
+                        <td style="padding: 14px 15px; color: #333; font-weight: 600;">{{ d.atividade.descricao }}</td>
+                        <td style="padding: 14px 15px; text-align: center;">
+                            <span style="background: #eef0ff; color: #7c83fd; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">
+                                {{ d.atividade.get_tipo_display }}
+                            </span>
+                        </td>
+                        <td style="padding: 14px 15px; text-align: center; color: #6ed07a; font-weight: 900; font-size: 1.1rem;">{{ d.acertos }}</td>
+                        <td style="padding: 14px 15px; text-align: center; color: #ff5c7c; font-weight: 900; font-size: 1.1rem;">{{ d.erros }}</td>
+                        <td style="padding: 14px 15px; text-align: center; font-weight: 900; color: #f7b400; font-size: 1.1rem;">{{ d.pontuacao }}</td>
+                        <td style="padding: 14px 15px; color: #aaa; font-size: 0.85rem;">{{ d.data_realizacao|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="color: #aaa; font-style: italic; text-align: center; padding: 20px 0;">
+                {{ dado.crianca.nome }} ainda não jogou nenhuma atividade. <a href="{% url 'users:dashboard' %}" style="color: #7c83fd; text-decoration: none;">Vá jogar agora!</a>
+            </p>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+<div style="text-align: center; margin-top: 1rem;">
+    <a href="{% url 'users:dashboard' %}" style="color: #7c83fd; text-decoration: none; font-weight: 700;">← Voltar ao Painel</a>
+</div>
+
+{% endblock %}

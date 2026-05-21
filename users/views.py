@@ -221,6 +221,34 @@ def salvar_desempenho_api(request):
     return JsonResponse({'status': 'error', 'message': 'Método não permitido'}, status=405)
 
 @login_required
+def desempenho_view(request):
+    """Página de desempenho para o responsável ver o histórico dos filhos"""
+    if not request.user.is_responsavel:
+        return redirect('users:dashboard')
+
+    criancas = request.user.criancas.all()
+
+    # Para cada criança, pega seus desempenhos com estatísticas
+    dados_criancas = []
+    for crianca in criancas:
+        desempenhos = crianca.desempenhos.select_related('atividade').order_by('-data_realizacao')
+        total_jogos = desempenhos.count()
+        total_acertos = sum(d.acertos for d in desempenhos)
+        total_erros = sum(d.erros for d in desempenhos)
+        pontuacao_total = sum(d.pontuacao for d in desempenhos)
+
+        dados_criancas.append({
+            'crianca': crianca,
+            'desempenhos': desempenhos,
+            'total_jogos': total_jogos,
+            'total_acertos': total_acertos,
+            'total_erros': total_erros,
+            'pontuacao_total': pontuacao_total,
+        })
+
+    return render(request, 'desempenho.html', {'dados_criancas': dados_criancas})
+
+@login_required
 def iniciar_jogo_view(request, tipo):
     """Roteador inteligente: encontra a próxima atividade não-concluída pela criança"""
     if not request.user.is_responsavel:

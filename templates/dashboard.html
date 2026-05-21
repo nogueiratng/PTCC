@@ -79,7 +79,7 @@
     <div class="performance-card">
         <h3>Acompanhe o desempenho</h3>
         <p>Veja o desenvolvimento e as conquistas da criança de forma detalhada.</p>
-        <button class="btn-primary">Acessar painel ></button>
+        <a href="{% url 'users:desempenho' %}" class="btn-primary" style="text-decoration: none; display: inline-block;">Acessar painel ></a>
         <img src="{% static 'img/grafico.png' %}" alt="Gráfico" class="mini-chart-img">
     </div>
 </section>

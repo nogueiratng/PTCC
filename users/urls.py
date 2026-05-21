@@ -16,4 +16,5 @@ urlpatterns = [
     path('jogar/<int:atividade_id>/', views.jogar_atividade_view, name='jogar_atividade'),
     path('api/salvar-desempenho/', views.salvar_desempenho_api, name='salvar_desempenho'),
     path('iniciar/<str:tipo>/', views.iniciar_jogo_view, name='iniciar_jogo'),
+    path('desempenho/', views.desempenho_view, name='desempenho'),
 ]

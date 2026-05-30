@@ -5,20 +5,34 @@
 {% block page_subtitle %}Escolha uma atividade e vamos <strong>aprender</strong> juntos!{% endblock %}
 
 {% block content %}
+
 {% if request.user.is_responsavel %}
 <section class="children-container" style="background: white; padding: 20px; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
         <h2 style="margin: 0; color: #333;">👦👧 Minhas Crianças</h2>
         <a href="{% url 'users:adicionar_crianca' %}" class="btn btn-primary" style="padding: 10px 20px; background-color: deeppink; color: white; text-decoration: none; border-radius: 10px;">+ Adicionar Filho(a)</a>
     </div>
-    
+
     {% if criancas %}
         <div style="display: flex; gap: 15px; flex-wrap: wrap;">
             {% for crianca in criancas %}
-                <div style="background: #f7f7f7; padding: 15px; border-radius: 10px; border-left: 5px solid lightskyblue; min-width: 200px;">
-                    <h3 style="margin: 0 0 5px 0; color: #555;">{{ crianca.nome }}</h3>
-                    <p style="margin: 0; font-size: 0.9rem; color: #777;">Idade: {{ crianca.idade }} anos</p>
+                {% if crianca == crianca_ativa %}
+                <div style="background: linear-gradient(135deg, #eef0ff, #f5f0ff); padding: 15px 20px; border-radius: 14px; border: 2px solid #7c83fd; min-width: 200px; position: relative;">
+                    <span style="position: absolute; top: -10px; left: 14px; background: #7c83fd; color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em;">✨ ATIVO</span>
+                    <h3 style="margin: 8px 0 4px 0; color: #4a4da8;">{{ crianca.nome }}</h3>
+                    <p style="margin: 0; font-size: 0.9rem; color: #7c83fd;">Idade: {{ crianca.idade }} anos</p>
+                    <p style="margin: 6px 0 0; font-size: 0.78rem; color: #999; font-style: italic;">Jogando agora</p>
                 </div>
+                {% else %}
+                <div style="background: #f7f7f7; padding: 15px 20px; border-radius: 14px; border: 1.5px solid #eee; min-width: 200px;">
+                    <h3 style="margin: 0 0 5px 0; color: #555;">{{ crianca.nome }}</h3>
+                    <p style="margin: 0 0 10px; font-size: 0.9rem; color: #777;">Idade: {{ crianca.idade }} anos</p>
+                    <a href="{% url 'users:selecionar_crianca' crianca.id %}"
+                       style="display: inline-block; padding: 6px 14px; background: #f0f2ff; color: #7c83fd; border-radius: 999px; font-size: 0.82rem; font-weight: 700; text-decoration: none; border: 1.5px solid #d4d7ff; transition: background 0.2s;">
+                        🔄 Selecionar
+                    </a>
+                </div>
+                {% endif %}
             {% endfor %}
         </div>
     {% else %}
@@ -59,18 +73,43 @@
 
 <section class="stats-container">
     <div class="progress-card">
-        <h3>Seu progresso</h3>
+        <h3>
+            Progresso de
+            {% if crianca_ativa %}
+                <span style="color: #7c83fd;">{{ crianca_ativa.nome }}</span>
+            {% else %}
+                <span style="color: #aaa;">nenhuma criança selecionada</span>
+            {% endif %}
+        </h3>
         <div class="progress-details">
-            <div class="chart-70">70% <span>Concluído</span></div>
+            <div class="chart-70">
+                {{ progress_percentage }}%
+                <span>Concluído</span>
+            </div>
             <div class="badges">
-                <p>Continue assim! Você está indo muito bem!</p>
+                {% if crianca_ativa %}
+                    <p>
+                        {% if progress_percentage == 100 %}
+                            🏆 Incrível! {{ crianca_ativa.nome }} completou todas as atividades!
+                        {% elif progress_percentage > 0 %}
+                            Continue assim! {{ crianca_ativa.nome }} está indo muito bem!
+                        {% else %}
+                            Vamos começar! Escolha uma atividade acima. 🚀
+                        {% endif %}
+                    </p>
+                {% else %}
+                    <p>Selecione uma criança para ver o progresso.</p>
+                {% endif %}
                 <div class="progress-bar">
-                    <div class="progress-fill"></div>
+                    <div class="progress-fill" id="dashProgressFill"></div>
                 </div>
+                <script>
+                    document.getElementById('dashProgressFill').style.width = '{{ progress_percentage }}%';
+                </script>
                 <div class="badge-icons">
-                    <span>⭐ 12 Atividades</span>
-                    <span>🏆 8 Conquistas</span>
-                    <span>🕒 5h Tempo</span>
+                    <span>⭐ {{ completed_activities }} Atividade{{ completed_activities|pluralize:"s" }}</span>
+                    <span>🏆 {{ total_pontuacao }} Pontos</span>
+                    <span>📚 {{ total_atividades }} Total</span>
                 </div>
             </div>
         </div>
